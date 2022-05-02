@@ -1,0 +1,38 @@
+{% extends 'layout/base.html' %}
+{% block content %}
+<!-- Contact Section-->
+<section class="page-section" id="signup">
+    <div class="container">
+        <!-- Contact Section Heading-->
+        <h2 class="page-section-heading text-center text-uppercase text-secondary mb-0">회원가입</h2>
+        <!-- Icon Divider-->
+        <div class="divider-custom">
+            <div class="divider-custom-line"></div>
+            <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
+            <div class="divider-custom-line"></div>
+        </div>
+        <!-- Contact Section Form-->
+        <div class="row justify-content-center">
+            <div class="col-lg-4 col-xl-7">
+
+                <div class="form-floating mb-3">
+                    <a href="emailsignup" class="btn btn-primary btn-xl">이메일로 가입하기</a>
+                </div>
+
+                <div class="form-floating mb-3">
+                    <a href="kakaosignup" class="btn btn-warning btn-xl">카카오로 회원가입</a>
+                </div>
+
+                <div class="form-floating mb-3">
+                    <a href="/user/unlink" class="btn btn-warning btn-xl">동의 철회</a>
+                </div>
+
+                <!-- Submit Button-->
+
+
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

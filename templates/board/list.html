@@ -1,0 +1,157 @@
+{% extends 'layout/base.html' %}
+{% block content %}
+{% load static %}
+<!-- Portfolio Section-->
+<section class="page-section portfolio" id="list">
+    <div class="container">
+        <!-- Portfolio Section Heading-->
+        <h2 class="page-section-heading text-center text-uppercase text-secondary mb-0">게시판</h2>
+        <!-- Icon Divider-->
+        <div class="divider-custom">
+            <div class="divider-custom-line"></div>
+            <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
+            <div class="divider-custom-line"></div>
+        </div>
+        <!-- Portfolio Grid Items-->
+        <div class="row justify-content-center">
+            {% if posts %}
+            {% for post in posts %}
+            <!-- Portfolio Items -->
+            <div class="col-md-6 col-lg-4 mb-5">
+                <div id="carouselExampleIndicators{{ post.id }}" class="portfolio-item mx-auto carousel slide"
+                     data-bs-ride="carousel">
+                    <div class="carousel-indicators">
+                        <button type="button" data-bs-target="#carouselExampleIndicators{{ post.id }}"
+                                data-bs-slide-to="0"
+                                class="active" aria-current="true" aria-label="Slide 1"></button>
+                        <button type="button" data-bs-target="#carouselExampleIndicators{{ post.id }}"
+                                data-bs-slide-to="1"
+                                aria-label="Slide 2"></button>
+                        <button type="button" data-bs-target="#carouselExampleIndicators{{ post.id }}"
+                                data-bs-slide-to="2"
+                                aria-label="Slide 3"></button>
+                    </div>
+                    <div class="carousel-inner">
+                        <div class="carousel-item active">
+                            <img class="img-fluid" src="{% static 'assets/img/portfolio/cabin.png' %}" alt="..."/>
+                        </div>
+                        <div class="carousel-item">
+                            <img class="img-fluid" src="{% static 'assets/img/portfolio/cake.png' %}" alt="..."/>
+                        </div>
+                        <div class="carousel-item">
+                            <img class="img-fluid" src="{% static 'assets/img/portfolio/game.png' %}" alt="..."/>
+                        </div>
+                    </div>
+                    <button class="carousel-control-prev" type="button"
+                            data-bs-target="#carouselExampleIndicators{{ post.id }}"
+                            data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button"
+                            data-bs-target="#carouselExampleIndicators{{ post.id }}"
+                            data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+                <div class="portfolio-item mx-auto">
+                    <div class="portfolio-item-bottom h-75 row
+                            align-items-center justify-content-center">
+                        <div class="col-8" data-bs-toggle="modal"
+                             data-bs-target="#portfolioModal{{post.id}}">
+                            <h6 class="text-secondary">{{ post.writer }}</h6>
+                            <h3>{{ post.title | truncatechars:10   }}</h3>
+                        </div>
+                        <h3 onclick="sendLike( {{ post.id }}, this)" class="col-2">
+                            {% if user in post.like.all %}
+                                ♥
+                            {% else %}
+                                ♡
+                            {% endif %}
+                        </h3>
+                        <h6 class="col-2"> {{ post.like.count }} </h6>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+            {% endif %}
+            <script>
+                function sendLike(bid, event) {
+                    var httpRequest = new XMLHttpRequest();
+			        httpRequest.onreadystatechange = function() {
+				        if (httpRequest.readyState == XMLHttpRequest.DONE && httpRequest.status == 200 ) {
+				            var json = JSON.parse(httpRequest.responseText);
+
+				            if (json['message'] == 'add' ) {
+                                event.innerText = "♥"
+                                event.nextSibling.nextSibling.innerText = json['like_cnt'];
+				            } else if (json['message'] == 'del' ) {
+                                event.innerText = "♡"
+                                event.nextSibling.nextSibling.innerText = json['like_cnt'];
+				            }
+
+				        }
+			        };
+
+			        httpRequest.open("GET", "/board/like/" + bid, true);
+			        httpRequest.send();
+                }
+            </script>
+
+
+
+
+
+
+
+            {% if posts %}
+            {% for post in posts %}
+            <div class="portfolio-modal modal fade" id="portfolioModal{{post.id}}" tabindex="-1"
+                 aria-labelledby="portfolioModal{{post.id}}" aria-hidden="true">
+                <div class="modal-dialog modal-xl">
+                    <div class="modal-content">
+                        <div class="modal-header border-0">
+                            <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body text-center pb-5">
+                            <div class="container">
+                                <div class="row justify-content-center">
+                                    <div class="col-lg-8">
+                                        <!-- Portfolio Modal - Title-->
+                                        <h2 class="portfolio-modal-title text-secondary text-uppercase mb-0">
+                                            {{ post.title }}
+                                        </h2>
+
+                                        <!-- Icon Divider-->
+                                        <div class="divider-custom">
+                                            <div class="divider-custom-line"></div>
+                                            <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
+                                            <div class="divider-custom-line"></div>
+                                        </div>
+                                        <h6 class="text-center text-secondary mb-0">
+                                            by. {{ post.writer }} / {{ post.create_date }}
+                                        </h6>
+                                        <br>
+                                        <!-- Portfolio Modal - Text-->
+                                        <p class="mb-4">{{ post.contents }}</p>
+                                        {% if request.user == post.writer %}
+                                        <a class="btn btn-primary btn-xl" href="/board/update/{{ post.id }}">수정</a>
+                                        <a class="btn btn-primary btn-xl" href="/board/delete/{{ post.id }}">삭제</a>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+            {% endif %}
+
+
+        </div>
+    </div>
+</section>
+
+{% endblock %}

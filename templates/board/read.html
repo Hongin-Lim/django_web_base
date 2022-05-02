@@ -1,0 +1,36 @@
+{% extends 'layout/base.html' %}
+{% block content %}
+<!-- Contact Section-->
+<section class="page-section" id="login">
+    <div class="container">
+        {% if post %}
+        <h2 class="page-section-heading text-center text-uppercase text-secondary mb-0">{{ post.title }}</h2>
+        <!-- Icon Divider-->
+        <div class="divider-custom">
+            <div class="divider-custom-line"></div>
+            <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
+            <div class="divider-custom-line"></div>
+        </div>
+        <h6 class="text-center text-secondary mb-0"> by. {{ post.writer }} / {{ post.create_date }} </h6>
+
+        <!-- Contact Section Form-->
+        <div class="row justify-content-center">
+            <div class="col-lg-8 col-xl-7">
+
+                    <div class="form-floating mb-3">
+                        <textarea readonly rows="20" name="contents" class="form-control" id="contents" placeholder="작성자"> {{ post.contents }}</textarea>
+                        <label for="contents">내용</label>
+                    </div>
+
+
+                    {% if request.user == post.writer %}
+                        <a class="btn btn-primary btn-xl" href="/board/update/{{ post.id }}">수정</a>
+                        <a class="btn btn-primary btn-xl" href="/board/delete/{{ post.id }}">삭제</a>
+                    {% endif %}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
